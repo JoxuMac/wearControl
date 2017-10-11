@@ -1,0 +1,11 @@
+c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\bin\Debug\wearControl.exe.config
+c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\obj\Debug\wearControl.Form1.resources
+c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\obj\Debug\wearControl.Resources.resources
+c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\obj\Debug\wearControl.vbproj.GenerateResource.Cache
+c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\bin\Debug\wearControl.exe
+c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\bin\Debug\wearControl.pdb
+c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\bin\Debug\wearControl.xml
+c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\obj\Debug\wearControl.exe
+c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\obj\Debug\wearControl.xml
+c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\obj\Debug\wearControl.pdb
+c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\obj\Debug\wearControl.vbprojResolveAssemblyReference.cache
