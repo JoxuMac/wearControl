@@ -9,3 +9,15 @@ c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\obj
 c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\obj\Debug\wearControl.xml
 c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\obj\Debug\wearControl.pdb
 c:\users\josue\documents\visual studio 2015\Projects\wearControl\wearControl\obj\Debug\wearControl.vbprojResolveAssemblyReference.cache
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\bin\Debug\wearControl.exe.config
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\bin\Debug\wearControl.exe
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\bin\Debug\wearControl.pdb
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\bin\Debug\wearControl.xml
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Debug\wearControl.vbprojResolveAssemblyReference.cache
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Debug\wearControl.Resources.resources
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Debug\wearControl.vbproj.GenerateResource.Cache
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Debug\wearControl.vbproj.CoreCompileInputs.cache
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Debug\wearControl.exe
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Debug\wearControl.xml
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Debug\wearControl.pdb
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Debug\wearControl.wearControl.resources
