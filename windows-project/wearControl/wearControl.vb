@@ -184,9 +184,12 @@ Public Class wearControl
         style = MsgBoxStyle.DefaultButton2 Or
         MsgBoxStyle.Question Or MsgBoxStyle.YesNo
         response = MsgBox(msg, style, "wearControl")
-        If response = MsgBoxResult.Yes Then
+        If response = MsgBoxResult.No Then
             ThreadConection.Abort()
             Me.Close()
+        Else
+            Close()
+            End
         End If
     End Sub
 
