@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.wearable.view.DismissOverlayView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -29,8 +30,12 @@ public class MainActivity extends Activity {
 		super.onCreate(dfuse);
 
         if(Params.TCPConection!=null){
-            Params.UDPConection = new UDPLink();
-            UDPLink.sendBroadcast(Params.PIN);
+            UDPLink UDPConection = new UDPLink();
+            try {
+                UDPConection.sendPIN(Params.PIN);
+            } catch(Exception e){
+                Log.e("EXCEPTION", "Excepcion: "+e);
+            }
             // espera y escucha
 
           //  Params.TCPConection = new TCPLink(IP, puerto??);

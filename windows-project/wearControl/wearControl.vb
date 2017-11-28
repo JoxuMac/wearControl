@@ -36,6 +36,9 @@ Public Class wearControl
     Private Sub ConectionProtocol()
         ip = UDPListener()
 
+        Console.WriteLine(ip)
+
+
         createTCPServer(ip)
 
         'puerto aleatorio de momento en port
