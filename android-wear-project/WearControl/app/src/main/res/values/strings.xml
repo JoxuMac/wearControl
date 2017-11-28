@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">wearControl</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="intro_text">Long press to go back home.</string>
+    <string-array name="selector_array">
+        <item>Applications</item>
+        <item>Configuration</item>
+        <item>Credits</item>
+    </string-array>
+    <string name="fa_stop">&#xf04d;</string>
+</resources>

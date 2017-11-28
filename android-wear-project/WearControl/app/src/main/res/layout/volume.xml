@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_grey"
+    android:orientation="vertical" >
+
+
+    <Button
+        android:id="@+id/btnVolumeUp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_weight="1"
+        android:background="@android:drawable/progress_horizontal"
+        android:text="VOL +"
+        android:onClick="btnVolUp"/>
+
+    <Button
+        android:id="@+id/btnMute"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_weight="1"
+        android:background="@android:drawable/progress_horizontal"
+        android:text="Mute/Unmute"
+        android:onClick="btnMute_Unmute"/>
+
+    <Button
+        android:id="@+id/btnVolumeDown"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_weight="1"
+        android:background="@android:drawable/progress_horizontal"
+        android:text="VOL -"
+        android:onClick="btnVolDown"/>
+</LinearLayout>
