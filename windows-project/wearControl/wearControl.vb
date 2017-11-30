@@ -1,124 +1,239 @@
-﻿'ap escucha udp
-'reloj envia pin por broadcast y se pone a la escucha 
-'app comprueba pin, si correcto, envia puerto por udp a la ip del reloj y activa servidor tcp con ip del reloj
-'reloj escucha puerto y se conecta por tcp a la ip de la app
-
-'createTCPServer NotInheritable se si cambiar port = .... por un return, comprobar si funcionaria
-
-'Imports
+﻿' Imports
+Imports System.IO
 Imports System.Net
 Imports System.Net.Sockets
 Imports System.Text
 Imports System.Threading
+Imports System.Xml
 
+' wearControl Class
 Public Class wearControl
 
-    'Pin Integer
-    Private pin As Int32 = 1234
+    ' Pin Integer
+    Private pin As Int32
 
-    'System Control
+    ' System Control
     Private pc As New SystemControl
 
-    'IP Address
+    ' IP Address
     Private ip As String
 
-    'Port
+    ' Port
     Private port As Int32
 
-    'Conection Thread
+    ' Socket
+    Private socket As Int32 = 11000
+
+    ' Conection Thread
     Dim ThreadConection As Thread
 
-    'TCP Conection
+    ' TCP Listener
     Dim _server As TcpListener
-    Dim _listOfClients As New List(Of TcpClient)
 
-    'Conection Protocol
+    ' Thread TCP Listener
+    Private CommThread As Thread
+
+    ' IsListening TCP Listener
+    Public IsListening As Boolean = True
+
+    ' TCP Stream Data
+    Shared Stream As NetworkStream
+
+    ' Language
+    Private language As String
+    Private pinError As String
+    Private exitQuestion As String
+    Private exitWarning As String
+
+    ' Conection Protocol
     Private Sub ConectionProtocol()
-        ip = UDPListener()
+        'Waiting for MSG from Smartwatch and Return Smartwatch IP
+        ip = UDPListener(socket)
 
-        Console.WriteLine(ip)
+        ' Creating TCP Server and Return TCP Port
+        port = createTCPServer(ip)
 
-
-        createTCPServer(ip)
-
-        'puerto aleatorio de momento en port
-
-        UDPSender(ip, port)
-
-
-        'generar puerto aleatorio
-
-        'crear servidor tcp por puerto aleatorio y a la escucha de la ip
-
-        ' enviar puerto aleatorio por ip
-
-
-
+        ' Sending TCP Port to Smartwatch
+        UDPSender(ip, socket, port)
     End Sub
 
-    'Load Form
+    ' Load Form
     Private Sub wearControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        tbxPin.Text = pin
+        Try
+            readConfigXML()
+            tbxPin.Text = pin
+            readLanguageXML()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            Close()
+        End Try
+
         ThreadConection = New Thread(AddressOf ConectionProtocol)
         ThreadConection.Start()
     End Sub
 
-    'Create TCP Server
-    Private Sub createTCPServer(ip As String)
-        Try
-            Dim port As Integer = 5432
+    ' Select XML Language from XML
+    Private Sub readLanguageXML()
+        Dim m_xmlr As XmlTextReader
+        m_xmlr = New XmlTextReader("languages.xml")
 
-            _server = New TcpListener(IPAddress.Parse(ip), port)
+        m_xmlr.WhitespaceHandling = WhitespaceHandling.None
+
+        m_xmlr.Read()
+        m_xmlr.Read()
+
+        cbxLanguage.Items.Clear()
+
+        ' Load the Loop
+        While Not m_xmlr.EOF
+
+            m_xmlr.Read()
+
+            If Not m_xmlr.IsStartElement() Then
+                Exit While
+            End If
+
+            Dim readLanguage = m_xmlr.GetAttribute("language")
+
+            cbxLanguage.Items.Add(readLanguage)
+            m_xmlr.Read()
+            If (readLanguage.Equals(language)) Then
+
+                cbxLanguage.SelectedIndex = cbxLanguage.FindStringExact(readLanguage)
+
+                ' Get the PIN label
+                lblPin.Text = m_xmlr.ReadElementString("pin")
+
+                ' Get the PIN Error
+                pinError = m_xmlr.ReadElementString("pin_error")
+
+                ' Get the Acept Button
+                btnAcept.Text = m_xmlr.ReadElementString("acept")
+
+                ' Get the Language label
+                lblLanguage.Text = m_xmlr.ReadElementString("language")
+
+                ' Get the Exit Question Message
+                exitQuestion = m_xmlr.ReadElementString("exit_question")
+
+                ' Get the Exit Warning Message
+                exitWarning = m_xmlr.ReadElementString("exit_warning")
+
+                ' Get the Configuration label
+                ContextMenuStrip1.Items.Item(0).Text = m_xmlr.ReadElementString("configuration")
+
+                ' Get the Exit label
+                ContextMenuStrip1.Items.Item(1).Text = m_xmlr.ReadElementString("exit")
+            Else
+                m_xmlr.ReadElementString("pin")
+                m_xmlr.ReadElementString("pin_error")
+                m_xmlr.ReadElementString("acept")
+                m_xmlr.ReadElementString("language")
+                m_xmlr.ReadElementString("exit_question")
+                m_xmlr.ReadElementString("exit_warning")
+                m_xmlr.ReadElementString("configuration")
+                m_xmlr.ReadElementString("exit")
+
+            End If
+        End While
+        m_xmlr.Close()
+    End Sub
+
+    ' Read Configuration from XML
+    Private Sub readConfigXML()
+        Dim doc As New XmlDocument()
+        doc.Load("configuration.xml")
+        Dim child As XmlNode = doc.SelectSingleNode("/configuration")
+        If Not (child Is Nothing) Then
+            Dim nr As New XmlNodeReader(child)
+            nr.Read()
+            nr.Read()
+            nr.Read()
+            pin = nr.Value
+            nr.Read()
+            nr.Read()
+            nr.Read()
+            language = nr.Value
+        End If
+    End Sub
+
+    ' Save Configuration from XML
+    Private Sub saveConfigXML()
+        Dim writer As New XmlTextWriter("configuration.xml", System.Text.Encoding.UTF8)
+        writer.WriteStartDocument(True)
+        writer.Formatting = Formatting.Indented
+        writer.Indentation = 2
+        writer.WriteStartElement("configuration")
+        writer.WriteStartElement("pin")
+        writer.WriteString(pin)
+        writer.WriteEndElement()
+        writer.WriteStartElement("language")
+        writer.WriteString(language)
+        writer.WriteEndElement()
+        writer.WriteEndDocument()
+        writer.Close()
+    End Sub
+
+    ' Create TCP Server
+    Private Function createTCPServer(ip As String)
+        Try
+            _server = New TcpListener(IPAddress.Parse(ip), 0)
             _server.Start()
 
             Me.port = CType(_server.LocalEndpoint, IPEndPoint).Port()
 
-            Threading.ThreadPool.QueueUserWorkItem(AddressOf NewTCPConection)
+            CommThread = New Thread(New ThreadStart(AddressOf Listening))
+            CommThread.Start()
 
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
+        Return port
+    End Function
+
+    ' TCP Listener
+    Private Sub Listening()
+        'Client TCP Data and Client
+        Dim ClientData As StreamReader
+        Dim client As TcpClient
+
+        ' Listening Loop
+        Do Until IsListening = False
+
+            ' New Connection
+            If _server.Pending = True Then
+                client = _server.AcceptTcpClient
+                ClientData = New StreamReader(client.GetStream)
+
+                pc.sendCommand(ClientData.ReadToEnd)
+            End If
+        Loop
     End Sub
 
-    'New TCP Conection
-    Private Sub NewTCPConection(state As Object)
-        Dim client As TcpClient = _server.AcceptTcpClient()
-        Try
-            '  _listOfClients.Add(client)
-            ' Threading.ThreadPool.QueueUserWorkItem(AddressOf NewTCPConection)
+    ' UDP Listener
+    Private Function UDPListener(socket As Int32)
+        Dim receivingUdpClient As UdpClient
+        Dim RemoteIpEndPoint As New _
+              System.Net.IPEndPoint(System.Net.IPAddress.Any, 0)
 
-            While True
-                Dim ns As NetworkStream = client.GetStream()
+        receivingUdpClient = New System.Net.Sockets.UdpClient(socket)
 
-                '  Dim toReceive(3) As Byte
-                Dim toReceive(100000) As Byte
-                ns.Read(toReceive, 0, toReceive.Length)
-                Dim msg As String = Encoding.ASCII.GetString(toReceive)
+        Dim strMessage As String = String.Empty
+        Do
+            Dim bytRecieved As Byte() =
+        receivingUdpClient.Receive(RemoteIpEndPoint)
+            strMessage = Encoding.ASCII.GetString(bytRecieved)
+        Loop While (Convert.ToInt32(strMessage) <> pin)
+        receivingUdpClient.Close()
+        Return RemoteIpEndPoint.Address.ToString
+    End Function
 
-                pc.sendCommand(msg)
-
-                '   For Each c As TcpClient In _listOfClients
-                'If c IsNot client Then
-                ' Dim nns As NetworkStream = c.GetStream()
-                '         nns.Write(Encoding.ASCII.GetBytes(txt), 0, txt.Length)
-                ' End If
-                '  Next
-            End While
-
-        Catch ex As Exception
-            '   If _listOfClients.Contains(client) Then
-            '   _listOfClients.Remove(client)
-            '   End If
-            MsgBox(ex.Message)
-        End Try
-    End Sub
-
-    'UDP Sender
-    Private Sub UDPSender(ip As String, port As Int32)
+    ' UDP Sender
+    Private Sub UDPSender(ip As String, socket As Int32, port As Int32)
         Dim UDPClient As New UdpClient()
         UDPClient.Client.SetSocketOption(SocketOptionLevel.Socket,
-           SocketOptionName.ReuseAddress, True)
-        UDPClient.Connect(ip, 11000)
+         SocketOptionName.ReuseAddress, True)
+        UDPClient.Connect(ip, socket)
         Try
             Dim bytSent As Byte() = Encoding.ASCII.GetBytes(port)
             UDPClient.Send(bytSent, bytSent.Length)
@@ -128,35 +243,7 @@ Public Class wearControl
         End Try
     End Sub
 
-    'UDP Listener
-    Private Function UDPListener()
-        Dim UDPClient As UdpClient = New UdpClient()
-        UDPClient.Client.SetSocketOption(SocketOptionLevel.Socket,
-         SocketOptionName.ReuseAddress, True)
-        UDPClient.Client.Bind(New IPEndPoint(IPAddress.Any, 11000))
-        Dim clockip As String = ""
-        Try
-            Dim iepRemoteEndPoint As IPEndPoint = New _
-            IPEndPoint(IPAddress.Any, 11000)
-            Dim strMessage As String = String.Empty
-            Do
-                Dim bytRecieved As Byte() =
-                UDPClient.Receive(iepRemoteEndPoint)
-                strMessage = Encoding.ASCII.GetString(bytRecieved)
-
-                Dim bytes As [Byte]() = iepRemoteEndPoint.Address.GetAddressBytes()
-
-                clockip = bytes(0) & "." & bytes(1) & "." & bytes(2) & "." & bytes(3)
-            Loop While (Convert.ToInt32(strMessage) <> pin)
-
-            UDPClient.Close()
-        Catch e As Exception
-            Console.WriteLine(e.ToString())
-        End Try
-        Return clockip
-    End Function
-
-    'Double Click ToolStrip
+    ' Double Click ToolStrip
     Private Sub NotifyIcon1_MouseDoubleClick(ByVal sender As System.Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles NotifyIcon1.MouseDoubleClick
         Try
             Me.Visible = True
@@ -167,7 +254,7 @@ Public Class wearControl
         End Try
     End Sub
 
-    'Config Button ToolStrip
+    ' Config Button ToolStrip
     Private Sub ConfiguracionToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ConfiguracionToolStripMenuItem.Click
         Try
             Me.Visible = True
@@ -178,12 +265,12 @@ Public Class wearControl
         End Try
     End Sub
 
-    'Exit Button ToolStrip
+    ' Exit Button ToolStrip
     Private Sub ExitToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ExitToolStripMenuItem.Click
         Dim msg As String
         Dim style As MsgBoxStyle
         Dim response As MsgBoxResult
-        msg = "¿Seguro que deseas cerrar wearControl?" & vbNewLine & "Se dejara de escuchar a tu smartwatch"
+        msg = exitQuestion & vbNewLine & exitWarning
         style = MsgBoxStyle.DefaultButton2 Or
         MsgBoxStyle.Question Or MsgBoxStyle.YesNo
         response = MsgBox(msg, style, "wearControl")
@@ -196,22 +283,27 @@ Public Class wearControl
         End If
     End Sub
 
-    'Acept Button Config Form
+    ' Acept Button Config Form
     Private Sub btnAceptar_Click(sender As Object, e As EventArgs) Handles btnAcept.Click
-        tbxPin.Text = pin
+        pin = tbxPin.Text
+        language = cbxLanguage.Text
+        saveConfigXML()
+        readLanguageXML()
         Me.Visible = False
     End Sub
 
-    'Exit Button Config Form
+    ' Exit Button Config Form
     Private Sub wearControl_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         e.Cancel = True
+        tbxPin.Text = pin
+        cbxLanguage.SelectedIndex = cbxLanguage.FindStringExact(language)
         Me.Visible = False
     End Sub
 
-    'Pin Textbox key pressed
+    ' Pin Textbox key pressed
     Private Sub tbxPin_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tbxPin.KeyPress
         If Asc(e.KeyChar) <> 13 AndAlso Asc(e.KeyChar) <> 8 AndAlso Not IsNumeric(e.KeyChar) Then
-            MessageBox.Show("Por favor, introduce un PIN numerico de 4 cifras")
+            MessageBox.Show(pinError)
             e.Handled = True
         End If
     End Sub

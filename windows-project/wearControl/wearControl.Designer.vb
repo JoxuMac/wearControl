@@ -31,6 +31,8 @@ Partial Class wearControl
         Me.btnAcept = New System.Windows.Forms.Button()
         Me.lblPin = New System.Windows.Forms.Label()
         Me.tbxPin = New System.Windows.Forms.TextBox()
+        Me.cbxLanguage = New System.Windows.Forms.ComboBox()
+        Me.lblLanguage = New System.Windows.Forms.Label()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -62,7 +64,7 @@ Partial Class wearControl
         '
         'btnAcept
         '
-        Me.btnAcept.Location = New System.Drawing.Point(90, 93)
+        Me.btnAcept.Location = New System.Drawing.Point(128, 131)
         Me.btnAcept.Name = "btnAcept"
         Me.btnAcept.Size = New System.Drawing.Size(75, 23)
         Me.btnAcept.TabIndex = 1
@@ -80,17 +82,36 @@ Partial Class wearControl
         '
         'tbxPin
         '
-        Me.tbxPin.Location = New System.Drawing.Point(90, 41)
+        Me.tbxPin.Location = New System.Drawing.Point(114, 41)
         Me.tbxPin.MaxLength = 4
         Me.tbxPin.Name = "tbxPin"
-        Me.tbxPin.Size = New System.Drawing.Size(75, 20)
+        Me.tbxPin.Size = New System.Drawing.Size(89, 20)
         Me.tbxPin.TabIndex = 3
+        '
+        'cbxLanguage
+        '
+        Me.cbxLanguage.FormattingEnabled = True
+        Me.cbxLanguage.Location = New System.Drawing.Point(114, 82)
+        Me.cbxLanguage.Name = "cbxLanguage"
+        Me.cbxLanguage.Size = New System.Drawing.Size(89, 21)
+        Me.cbxLanguage.TabIndex = 4
+        '
+        'lblLanguage
+        '
+        Me.lblLanguage.AutoSize = True
+        Me.lblLanguage.Location = New System.Drawing.Point(23, 85)
+        Me.lblLanguage.Name = "lblLanguage"
+        Me.lblLanguage.Size = New System.Drawing.Size(0, 13)
+        Me.lblLanguage.TabIndex = 5
+        Me.lblLanguage.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'wearControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(193, 142)
+        Me.ClientSize = New System.Drawing.Size(236, 176)
+        Me.Controls.Add(Me.lblLanguage)
+        Me.Controls.Add(Me.cbxLanguage)
         Me.Controls.Add(Me.tbxPin)
         Me.Controls.Add(Me.lblPin)
         Me.Controls.Add(Me.btnAcept)
@@ -116,4 +137,6 @@ Partial Class wearControl
     Friend WithEvents btnAcept As Button
     Friend WithEvents lblPin As Label
     Friend WithEvents tbxPin As TextBox
+    Friend WithEvents cbxLanguage As ComboBox
+    Friend WithEvents lblLanguage As Label
 End Class
