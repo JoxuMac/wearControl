@@ -9,6 +9,7 @@
     <exit_warning>Se dejara de escuchar a tu smartwatch</exit_warning>
 	<configuration>Configuracion</configuration>
 	<exit>Salir</exit>
+	<browse>Examinar</browse>
   </name>  
   <name language="en_EN">  
     <pin>PIN</pin>  
@@ -19,5 +20,6 @@
     <exit_warning>It will stop listening to your smartwatch</exit_warning>
 	<configuration>Configuration</configuration>
 	<exit>Exit</exit>
+	<browse>Browse</browse>
   </name>  
 </languages>

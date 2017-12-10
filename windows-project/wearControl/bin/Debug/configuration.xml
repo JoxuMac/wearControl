@@ -2,4 +2,7 @@
 <configuration>
   <pin>1234</pin>
   <language>es_ES</language>
+  <VLC>D:\Program Files (x86)\VideoLAN\VLC\vlc.exe</VLC>
+  <spotify>C:\Users\joxum\AppData\Roaming\Spotify\Spotify.exe</spotify>
+  <itunes />
 </configuration>

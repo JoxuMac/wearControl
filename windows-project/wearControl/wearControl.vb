@@ -15,46 +15,77 @@ Public Class wearControl
     ' System Control
     Private pc As New SystemControl
 
-    ' IP Address
-    Private ip As String
+    ' Thread Broadcast
+    Private BroadcastThread As Thread
 
-    ' Port
-    Private port As Int32
+    ' Thread UDP Listener
+    Private UDPThread As Thread
 
-    ' Socket
-    Private socket As Int32 = 11000
-
-    ' Conection Thread
+    ' Thread Conection 
     Dim ThreadConection As Thread
 
-    ' TCP Listener
-    Dim _server As TcpListener
+    ' Socket Listening
+    Private socketListener As Int32 = 11000
 
-    ' Thread TCP Listener
-    Private CommThread As Thread
+    ' Socket Broadcast
+    Private socketBroadcast As Int32 = 11001
 
-    ' IsListening TCP Listener
-    Public IsListening As Boolean = True
-
-    ' TCP Stream Data
-    Shared Stream As NetworkStream
+    ' UDP Client
+    Dim receivingUdpClient As UdpClient
 
     ' Language
-    Private language As String
-    Private pinError As String
-    Private exitQuestion As String
-    Private exitWarning As String
+    Private language, pinError, exitQuestion, exitWarning As String
 
     ' Conection Protocol
     Private Sub ConectionProtocol()
-        'Waiting for MSG from Smartwatch and Return Smartwatch IP
-        ip = UDPListener(socket)
 
-        ' Creating TCP Server and Return TCP Port
-        port = createTCPServer(ip)
+        'SEND BROADCAST EVERY 30 SECOND
+        BroadcastThread = New Thread(New ThreadStart(AddressOf UDPBroadcast))
+        BroadcastThread.Start()
 
-        ' Sending TCP Port to Smartwatch
-        UDPSender(ip, socket, port)
+        'LISTEN UDP
+        UDPThread = New Thread(New ThreadStart(AddressOf UDPListener))
+        UDPThread.Start()
+
+    End Sub
+
+    'UDP Broadcast
+    Private Sub UDPBroadcast()
+        Dim UDPClient As New UdpClient()
+        UDPClient.Client.SetSocketOption(SocketOptionLevel.Socket,
+         SocketOptionName.ReuseAddress, True)
+        UDPClient.Connect(System.Net.IPAddress.Broadcast, socketBroadcast)
+        Do
+            Try
+                Dim bytSent As Byte() = Encoding.ASCII.GetBytes(pin)
+                UDPClient.Send(bytSent, bytSent.Length)
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
+            Thread.Sleep(5000)
+        Loop While True
+        UDPClient.Close()
+    End Sub
+
+    ' UDP Listener
+    Private Sub UDPListener()
+        Dim RemoteIpEndPoint As New _
+           System.Net.IPEndPoint(System.Net.IPAddress.Any, 0)
+        receivingUdpClient = New System.Net.Sockets.UdpClient(socketListener)
+
+        Dim strMessage As String = String.Empty
+        Do
+            Dim bytRecieved As Byte() =
+            receivingUdpClient.Receive(RemoteIpEndPoint)
+            strMessage = Encoding.ASCII.GetString(bytRecieved)
+            If ((pin.ToString).Equals(strMessage.Substring(0, strMessage.IndexOf("-")))) Then
+                Dim paths(3) As String
+                paths(0) = tbxVLC.Text
+                paths(1) = tbxSpotify.Text
+                paths(2) = tbxiTunes.Text
+                pc.sendCommand(strMessage.Substring(strMessage.IndexOf("-") + 1), paths)
+            End If
+        Loop While True
     End Sub
 
     ' Load Form
@@ -102,7 +133,7 @@ Public Class wearControl
                 cbxLanguage.SelectedIndex = cbxLanguage.FindStringExact(readLanguage)
 
                 ' Get the PIN label
-                lblPin.Text = m_xmlr.ReadElementString("pin")
+                lblPin.Text = m_xmlr.ReadElementString("pin") + ":"
 
                 ' Get the PIN Error
                 pinError = m_xmlr.ReadElementString("pin_error")
@@ -111,7 +142,7 @@ Public Class wearControl
                 btnAcept.Text = m_xmlr.ReadElementString("acept")
 
                 ' Get the Language label
-                lblLanguage.Text = m_xmlr.ReadElementString("language")
+                lblLanguage.Text = m_xmlr.ReadElementString("language") + ":"
 
                 ' Get the Exit Question Message
                 exitQuestion = m_xmlr.ReadElementString("exit_question")
@@ -124,6 +155,13 @@ Public Class wearControl
 
                 ' Get the Exit label
                 ContextMenuStrip1.Items.Item(1).Text = m_xmlr.ReadElementString("exit")
+
+                ' Get the Browse Button label
+                Dim browse As String = m_xmlr.ReadElementString("browse")
+                btniTunes.Text = browse
+                btnSpotify.Text = browse
+                btnVLC.Text = browse
+
             Else
                 m_xmlr.ReadElementString("pin")
                 m_xmlr.ReadElementString("pin_error")
@@ -133,6 +171,7 @@ Public Class wearControl
                 m_xmlr.ReadElementString("exit_warning")
                 m_xmlr.ReadElementString("configuration")
                 m_xmlr.ReadElementString("exit")
+                m_xmlr.ReadElementString("browse")
 
             End If
         End While
@@ -154,6 +193,18 @@ Public Class wearControl
             nr.Read()
             nr.Read()
             language = nr.Value
+            nr.Read()
+            nr.Read()
+            nr.Read()
+            tbxVLC.Text = nr.Value
+            nr.Read()
+            nr.Read()
+            nr.Read()
+            tbxSpotify.Text = nr.Value
+            nr.Read()
+            nr.Read()
+            nr.Read()
+            tbxiTunes.Text = nr.Value
         End If
     End Sub
 
@@ -170,77 +221,17 @@ Public Class wearControl
         writer.WriteStartElement("language")
         writer.WriteString(language)
         writer.WriteEndElement()
+        writer.WriteStartElement("VLC")
+        writer.WriteString(tbxVLC.Text)
+        writer.WriteEndElement()
+        writer.WriteStartElement("spotify")
+        writer.WriteString(tbxSpotify.Text)
+        writer.WriteEndElement()
+        writer.WriteStartElement("itunes")
+        writer.WriteString(tbxiTunes.Text)
+        writer.WriteEndElement()
         writer.WriteEndDocument()
         writer.Close()
-    End Sub
-
-    ' Create TCP Server
-    Private Function createTCPServer(ip As String)
-        Try
-            _server = New TcpListener(IPAddress.Parse(ip), 0)
-            _server.Start()
-
-            Me.port = CType(_server.LocalEndpoint, IPEndPoint).Port()
-
-            CommThread = New Thread(New ThreadStart(AddressOf Listening))
-            CommThread.Start()
-
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-        Return port
-    End Function
-
-    ' TCP Listener
-    Private Sub Listening()
-        'Client TCP Data and Client
-        Dim ClientData As StreamReader
-        Dim client As TcpClient
-
-        ' Listening Loop
-        Do Until IsListening = False
-
-            ' New Connection
-            If _server.Pending = True Then
-                client = _server.AcceptTcpClient
-                ClientData = New StreamReader(client.GetStream)
-
-                pc.sendCommand(ClientData.ReadToEnd)
-            End If
-        Loop
-    End Sub
-
-    ' UDP Listener
-    Private Function UDPListener(socket As Int32)
-        Dim receivingUdpClient As UdpClient
-        Dim RemoteIpEndPoint As New _
-              System.Net.IPEndPoint(System.Net.IPAddress.Any, 0)
-
-        receivingUdpClient = New System.Net.Sockets.UdpClient(socket)
-
-        Dim strMessage As String = String.Empty
-        Do
-            Dim bytRecieved As Byte() =
-        receivingUdpClient.Receive(RemoteIpEndPoint)
-            strMessage = Encoding.ASCII.GetString(bytRecieved)
-        Loop While (Convert.ToInt32(strMessage) <> pin)
-        receivingUdpClient.Close()
-        Return RemoteIpEndPoint.Address.ToString
-    End Function
-
-    ' UDP Sender
-    Private Sub UDPSender(ip As String, socket As Int32, port As Int32)
-        Dim UDPClient As New UdpClient()
-        UDPClient.Client.SetSocketOption(SocketOptionLevel.Socket,
-         SocketOptionName.ReuseAddress, True)
-        UDPClient.Connect(ip, socket)
-        Try
-            Dim bytSent As Byte() = Encoding.ASCII.GetBytes(port)
-            UDPClient.Send(bytSent, bytSent.Length)
-            UDPClient.Close()
-        Catch e As Exception
-            Console.WriteLine(e.ToString())
-        End Try
     End Sub
 
     ' Double Click ToolStrip
@@ -275,7 +266,9 @@ Public Class wearControl
         MsgBoxStyle.Question Or MsgBoxStyle.YesNo
         response = MsgBox(msg, style, "wearControl")
         If response = MsgBoxResult.No Then
-            ThreadConection.Abort()
+            receivingUdpClient.Close()
+            UDPThread.Abort()
+            BroadcastThread.Abort()
             Me.Close()
         Else
             Close()
@@ -305,6 +298,27 @@ Public Class wearControl
         If Asc(e.KeyChar) <> 13 AndAlso Asc(e.KeyChar) <> 8 AndAlso Not IsNumeric(e.KeyChar) Then
             MessageBox.Show(pinError)
             e.Handled = True
+        End If
+    End Sub
+
+    ' VLC Button pressed
+    Private Sub btnVLC_Click(sender As Object, e As EventArgs) Handles btnVLC.Click
+        If ofdVLC.ShowDialog = DialogResult.OK Then
+            tbxVLC.Text = ofdVLC.FileName
+        End If
+    End Sub
+
+    ' Spotify Button pressed
+    Private Sub btnSpotify_Click(sender As Object, e As EventArgs) Handles btnSpotify.Click
+        If ofdSpotify.ShowDialog = DialogResult.OK Then
+            tbxSpotify.Text = ofdSpotify.FileName
+        End If
+    End Sub
+
+    ' iTunes Button pressed
+    Private Sub btniTunes_Click(sender As Object, e As EventArgs) Handles btniTunes.Click
+        If ofdiTunes.ShowDialog = DialogResult.OK Then
+            tbxiTunes.Text = ofdiTunes.FileName
         End If
     End Sub
 End Class
