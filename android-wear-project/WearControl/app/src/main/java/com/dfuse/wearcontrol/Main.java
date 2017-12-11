@@ -8,11 +8,9 @@
 package com.dfuse.wearcontrol;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
@@ -20,7 +18,6 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.wearable.view.DismissOverlayView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -36,6 +33,12 @@ public class Main extends Activity {
 
     @Override
 	protected void onCreate(Bundle dfuse) {
+
+        SharedPreferences prefs = this.getSharedPreferences(
+                "com.dfuse.wearcontrol", this.MODE_PRIVATE);
+        if(prefs.getString("wearPIN", null)!=null)
+            Params.PIN = prefs.getString("wearPIN", null);
+
 		super.onCreate(dfuse);
 
         final UDPLink UDP = new UDPLink();

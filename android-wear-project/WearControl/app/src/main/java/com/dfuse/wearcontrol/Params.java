@@ -7,8 +7,6 @@
 
 package com.dfuse.wearcontrol;
 
-import java.util.ArrayList;
-
 public class Params {
 
     public static UDPLink UDP;
@@ -17,7 +15,7 @@ public class Params {
 
     public static final int socketSender = 11000;
 
-    public static int PIN = 1234;
+    public static String PIN = "1234";
 
     public static String ip;
 

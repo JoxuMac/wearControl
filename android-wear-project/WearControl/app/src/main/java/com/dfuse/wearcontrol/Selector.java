@@ -37,11 +37,11 @@ public class Selector extends Fragment {
                 if (position == 0) {
                     Intent myIntent = new Intent(view.getContext(), Apps.class);
                     startActivityForResult(myIntent, 0);
-                }/*
+                }
                 if (position == 1) {
-                    Intent myIntent = new Intent(view.getContext(), ListItemActivity2.class);
+                    Intent myIntent = new Intent(view.getContext(), Configuration.class);
                     startActivityForResult(myIntent, 0);
-                } */
+                }
                 if (position == 2) {
                     Intent intent = new Intent(getActivity(), Credits.class);
                     ((Main) getActivity()).startActivity(intent);

@@ -39,7 +39,7 @@ public class UDPLink {
         DatagramSocket clientSocket = new DatagramSocket();
         InetAddress IPAddress = InetAddress.getByName(Params.ip);
         byte[] sendData = new byte[1024];
-        data = "1234-" + data;
+        data = Params.PIN + "-" + data;
         sendData = data.getBytes();
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, Params.socketSender);
 
