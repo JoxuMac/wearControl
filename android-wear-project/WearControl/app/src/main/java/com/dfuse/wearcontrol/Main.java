@@ -10,12 +10,17 @@ package com.dfuse.wearcontrol;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.wearable.view.DismissOverlayView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -81,6 +86,15 @@ public class Main extends Activity {
                         mPreSelectedBtArray[i].setBackgroundResource(android.R.drawable.radiobutton_off_background);
                     }
                 }
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int i =0 ;i<adapter.getCount();i++){
+                                mPreSelectedBtArray[i].setBackgroundResource(android.R.color.transparent);
+                        }
+                    }
+                }, 2000);
             }
 
 			@Override
@@ -131,7 +145,12 @@ public class Main extends Activity {
         }
 
         mPreSelectedBtArray[0].setBackgroundResource(android.R.drawable.radiobutton_on_background);
-	}
+
+        for(int i =0 ;i<adapter.getCount();i++){
+            mPreSelectedBtArray[i].setBackgroundResource(android.R.color.transparent);
+        }
+
+    }
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
@@ -142,9 +161,7 @@ public class Main extends Activity {
 	private class LongPressListener extends
 			GestureDetector.SimpleOnGestureListener {
 		@Override
-		public void onLongPress(MotionEvent event) {
-			/*mDismissOverlayView.show();*/
-		}
+		public void onLongPress(MotionEvent event) {}
 	}
 
 }
