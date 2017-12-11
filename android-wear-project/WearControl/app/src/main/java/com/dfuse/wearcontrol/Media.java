@@ -1,3 +1,10 @@
+/*
+    Project: wearControl
+    Author: Josue Gutierrez Duran
+    WebPage:
+    Class: Media
+ */
+
 package com.dfuse.wearcontrol;
 
 import android.app.Fragment;
@@ -54,23 +61,43 @@ public class Media extends Fragment{
        }
 
     public void btnPlay_Pause(View view) {
-        Params.TCPConection.sendPlay();
-        Log.e("onViewClicked", "PLAY / PAUSE");
+        try{
+            Params.UDP.sendPlay();
+            Log.e("onViewClicked", "PLAY / PAUSE");
+        }
+            catch(Exception e) {
+            System.out.print("Error: "+e);
+        }
     }
 
     public void btnStop(View view) {
-        Params.TCPConection.sendStop();
-        Log.e("onViewClicked", "STOP");
+        try{
+            Params.UDP.sendStop();
+            Log.e("onViewClicked", "STOP");
+        }
+        catch(Exception e) {
+            System.out.print("Error: "+e);
+        }
     }
 
     public void btnPrevious(View view) {
-        Params.TCPConection.sendBack();
-        Log.e("onViewClicked", "PREVIOUS");
+        try{
+            Params.UDP.sendBack();
+            Log.e("onViewClicked", "PREVIOUS");
+        }
+        catch(Exception e) {
+            System.out.print("Error: "+e);
+        }
     }
 
     public void btnNext(View view) {
-        Params.TCPConection.sendNext();
-        Log.e("onViewClicked", "NEXT");
+        try{
+            Params.UDP.sendNext();
+            Log.e("onViewClicked", "NEXT");
+        }
+        catch(Exception e) {
+            System.out.print("Error: "+e);
+        }
     }
 
        public static void stopCycling() {}

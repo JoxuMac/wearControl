@@ -1,3 +1,10 @@
+/*
+    Project: wearControl
+    Author: Josue Gutierrez Duran
+    WebPage:
+    Class: MainActivity
+ */
+
 package com.dfuse.wearcontrol;
 
 import android.app.Activity;
@@ -7,14 +14,13 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.wearable.view.DismissOverlayView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-public class MainActivity extends Activity {
+public class Main extends Activity {
 
 	private ViewPager mViewPager;
 	private DismissOverlayView mDismissOverlayView;
@@ -22,29 +28,28 @@ public class MainActivity extends Activity {
     private RelativeLayout mLayour;
     Button mPreSelectedBt;
     Button[] mPreSelectedBtArray;
-    //Conexion TCP
-    //Conexion UDP
 
     @Override
 	protected void onCreate(Bundle dfuse) {
 		super.onCreate(dfuse);
 
-        if(Params.TCPConection!=null){
-            UDPLink UDPConection = new UDPLink();
-            try {
-                UDPConection.sendPIN(Params.PIN);
-            } catch(Exception e){
-                Log.e("EXCEPTION", "Excepcion: "+e);
-            }
-            // espera y escucha
+        final UDPLink UDP = new UDPLink();
+        Params.UDP = UDP;
 
-          //  Params.TCPConection = new TCPLink(IP, puerto??);
-        }
-        //si conexion tcp !=null
-            //Conexion UDP
-            //espera de mensaje udp
-            //crear conexion tcp
-		setContentView(R.layout.activity_main);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+            try {
+                Params.UDP.Listen();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            }
+        });
+
+        thread.start();
+
+		setContentView(R.layout.main);
 
 		mDismissOverlayView = (DismissOverlayView) findViewById(R.id.dismiss);
 		mDismissOverlayView.setIntroText(R.string.intro_text);
@@ -57,10 +62,7 @@ public class MainActivity extends Activity {
 		adapter.addFragment(new Volume());
         Selector selector = new Selector();
 
-        //selector.setContext(getApplicationContext());
 		adapter.addFragment(selector);
-
-        //adapter.addFragment(new Selector2());
 
         mLayour=(RelativeLayout)findViewById(R.id.layout);
 
@@ -70,19 +72,15 @@ public class MainActivity extends Activity {
 			@Override
 			public void onPageSelected(int position) {
                 if(mPreSelectedBt != null){
-                    mPreSelectedBt.setBackgroundResource(android.R.drawable.ic_notification_clear_all);
+                    mPreSelectedBt.setBackgroundResource(android.R.drawable.radiobutton_off_background);
                 }
-                mPreSelectedBtArray[position].setBackgroundResource(android.R.drawable.ic_delete);
+                mPreSelectedBtArray[position].setBackgroundResource(android.R.drawable.radiobutton_on_background);
 
                 for(int i =0 ;i<adapter.getCount();i++){
                     if(i!=position){
-                        mPreSelectedBtArray[i].setBackgroundResource(android.R.drawable.ic_notification_clear_all);
+                        mPreSelectedBtArray[i].setBackgroundResource(android.R.drawable.radiobutton_off_background);
                     }
                 }
-
-//                Button currentBt = (Button)mLayour.getChildAt(position);
-//                currentBt.setBackgroundResource(android.R.drawable.ic_notification_clear_all);
-//                mPreSelectedBt = currentBt;
             }
 
 			@Override
@@ -101,7 +99,7 @@ public class MainActivity extends Activity {
 
         Button btCent = new Button(this);
         btCent.setLayoutParams(new ViewGroup.LayoutParams(20,20));
-        btCent.setBackgroundResource(android.R.drawable.ic_notification_clear_all);
+        btCent.setBackgroundResource(android.R.drawable.radiobutton_off_background);
         mPreSelectedBtArray[adapter.getCount()/2] = btCent;
         mPreSelectedBtArray[adapter.getCount()/2].setId(adapter.getCount() / 2 + 1);
         RelativeLayout.LayoutParams layoutParamsCent = new RelativeLayout.LayoutParams(20,20);
@@ -110,11 +108,11 @@ public class MainActivity extends Activity {
         layoutParamsCent.setMargins(0,0,0,20);
         mLayour.addView(mPreSelectedBtArray[adapter.getCount()/2],layoutParamsCent);
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_notification_clear_all);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), android.R.drawable.radiobutton_off_background);
         for (int i = 0; i < adapter.getCount(); i++) {
             Button bt = new Button(this);
             bt.setLayoutParams(new ViewGroup.LayoutParams(20,20));
-            bt.setBackgroundResource(android.R.drawable.ic_notification_clear_all);
+            bt.setBackgroundResource(android.R.drawable.radiobutton_off_background);
             if(i!=adapter.getCount()/2) {
                 mPreSelectedBtArray[i] = bt;
                 mPreSelectedBtArray[i].setId(i + 1);
@@ -132,7 +130,7 @@ public class MainActivity extends Activity {
             mLayour.addView(mPreSelectedBtArray[i],layoutParams);
         }
 
-        mPreSelectedBtArray[0].setBackgroundResource(android.R.drawable.ic_delete);
+        mPreSelectedBtArray[0].setBackgroundResource(android.R.drawable.radiobutton_on_background);
 	}
 
 	@Override
@@ -145,7 +143,7 @@ public class MainActivity extends Activity {
 			GestureDetector.SimpleOnGestureListener {
 		@Override
 		public void onLongPress(MotionEvent event) {
-			mDismissOverlayView.show();
+			/*mDismissOverlayView.show();*/
 		}
 	}
 

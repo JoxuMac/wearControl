@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/pic1"
     android:orientation="vertical"
+    android:background="#434343"
     android:descendantFocusability="blocksDescendants">
 
     <ListView
         android:id="@+id/selector_array"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:entries="@array/selector_array"
         android:clickable="false"
+        android:entries="@array/selector_array"
         android:focusable="false"
-        android:focusableInTouchMode="false"/>
+        android:focusableInTouchMode="false" />
 </LinearLayout>

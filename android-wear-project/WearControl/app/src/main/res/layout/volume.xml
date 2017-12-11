@@ -17,9 +17,8 @@
         android:layout_marginStart="2dp"
         android:layout_marginTop="2dp"
         android:layout_weight="1"
-        android:background="@android:drawable/progress_horizontal"
-        android:text="VOL +"
-        android:onClick="btnVolUp"/>
+        android:onClick="btnVolUp"
+        android:text="VOL +" />
 
     <Button
         android:id="@+id/btnMute"
@@ -32,9 +31,8 @@
         android:layout_marginStart="2dp"
         android:layout_marginTop="2dp"
         android:layout_weight="1"
-        android:background="@android:drawable/progress_horizontal"
-        android:text="Mute/Unmute"
-        android:onClick="btnMute_Unmute"/>
+        android:onClick="btnMute_Unmute"
+        android:text="Mute/Unmute" />
 
     <Button
         android:id="@+id/btnVolumeDown"
@@ -47,7 +45,6 @@
         android:layout_marginStart="2dp"
         android:layout_marginTop="2dp"
         android:layout_weight="1"
-        android:background="@android:drawable/progress_horizontal"
-        android:text="VOL -"
-        android:onClick="btnVolDown"/>
+        android:onClick="btnVolDown"
+        android:text="VOL -" />
 </LinearLayout>

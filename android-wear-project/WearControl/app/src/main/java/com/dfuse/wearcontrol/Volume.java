@@ -1,3 +1,10 @@
+/*
+    Project: wearControl
+    Author: Josue Gutierrez Duran
+    WebPage:
+    Class: Volume
+ */
+
 package com.dfuse.wearcontrol;
 
 import android.app.Fragment;
@@ -46,18 +53,33 @@ public class Volume extends Fragment{
     }
 
     public void btnMute_Unmute(View view) {
-        Params.TCPConection.sendMute();
-        Log.e("onViewClicked", "MUTE / UNMUTE");
+        try {
+            Params.UDP.sendMute();
+            Log.e("onViewClicked", "MUTE / UNMUTE");
+        }
+        catch(Exception e) {
+            Log.e("error", e.getMessage()+"ERROR MUTE / UNMUTE"+e);
+        }
     }
 
     public void btnVolUp(View view) {
-        Params.TCPConection.sendVolUp();
-        Log.e("onViewClicked", "VOL UP");
+        try{
+            Params.UDP.sendVolUp();
+            Log.e("onViewClicked", "VOL UP");
+        }
+            catch(Exception e) {
+            System.out.print("Error: "+e);
+        }
     }
 
     public void btnVolDown(View view) {
-        Params.TCPConection.sendVolDown();
-        Log.e("onViewClicked", "VOL DOWN");
+        try{
+            Params.UDP.sendVolDown();
+            Log.e("onViewClicked", "VOL DOWN");
+        }
+        catch(Exception e) {
+                System.out.print("Error: "+e);
+                }
     }
 
 	public void startCycling() {}

@@ -1,41 +1,92 @@
+/*
+    Project: wearControl
+    Author: Josue Gutierrez Duran
+    WebPage:
+    Class: UDPLink
+ */
+
 package com.dfuse.wearcontrol;
 
+import android.os.StrictMode;
 import java.net.*;
 
+
 public class UDPLink {
+    private String data;
 
-    int port = 11000;
+    public void Listen(){
+        String msg = "0";
+        try {
+            DatagramSocket dsocket = new DatagramSocket(Params.socketListener);
+            byte[] buffer = new byte[2048];
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
-    public UDPLink(){
+            dsocket.receive(packet);
+            msg = new String(buffer, 0, packet.getLength());
 
+            System.out.println(packet.getAddress().getHostName() + ": "
+                    + msg);
+
+            packet.setLength(buffer.length);
+
+            Params.ip = packet.getAddress().getHostAddress();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
     }
 
-    public void sendPIN(int PIN) throws Exception {
-
-        //BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+    public void sendData(String data) throws Exception {
         DatagramSocket clientSocket = new DatagramSocket();
-
-        	InetAddress IPAddress = InetAddress.getByName("255.255.255.255"); // BROADCAST ??
-       // InetAddress IPAddress = InetAddress.getByName("localhost");
-
+        InetAddress IPAddress = InetAddress.getByName(Params.ip);
         byte[] sendData = new byte[1024];
-        byte[] receiveData = new byte[1024];
+        data = "1234-" + data;
+        sendData = data.getBytes();
+        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, Params.socketSender);
 
-        //String sentence = inFromUser.readLine();
-        //sendData = sentence.getBytes();
-        sendData = Integer.toString(PIN).getBytes();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
-
-
-        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
+        StrictMode.setThreadPolicy(policy);
         clientSocket.send(sendPacket);
-
-        DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-        clientSocket.receive(receivePacket);
-
-        String modifiedSentence = new String(receivePacket.getData());
-        System.out.println("FROM SERVER:" + modifiedSentence);
         clientSocket.close();
     }
 
+    public void sendPlay() throws Exception {
+        sendData("0000");
+    }
+
+    public void sendNext() throws Exception {
+        sendData("0010");
+    }
+
+    public void sendBack() throws Exception {
+        sendData("0011");
+    }
+
+    public void sendVolUp()throws Exception {
+        sendData("0101");
+    }
+
+    public void sendVolDown()throws Exception {
+        sendData("0110");
+    }
+
+    public void sendMute()throws Exception {
+        sendData("0100");
+    }
+
+    public void sendStop() throws Exception {
+        sendData("0001");
+    }
+
+    public void sendSpotify()throws Exception {
+        sendData("0111");
+    }
+
+    public void sendVLC()throws Exception {
+        sendData("1001");
+    }
+
+    public void sendiTunes()throws Exception {
+        sendData("1000");
+    }
 }

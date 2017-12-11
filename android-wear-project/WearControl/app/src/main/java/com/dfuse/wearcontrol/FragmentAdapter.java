@@ -1,3 +1,10 @@
+/*
+    Project: wearControl
+    Author: Josue Gutierrez Duran
+    WebPage:
+    Class: FragmentAdapter
+ */
+
 package com.dfuse.wearcontrol;
 
 import android.app.Fragment;
@@ -28,7 +35,6 @@ import java.util.ArrayList;
 	public void addFragment(Fragment fragment) {
 		// TODO Auto-generated method stub
 		 mFragments.add(fragment);
-         // Update the pager when adding a fragment.
          notifyDataSetChanged();
 	}
 

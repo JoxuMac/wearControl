@@ -10,5 +10,14 @@
         <item>Configuration</item>
         <item>Credits</item>
     </string-array>
+
+    <string-array name="apps_array">
+        <item>VLC</item>
+        <item>Spotify</item>
+        <item>iTunes</item>
+    </string-array>
     <string name="fa_stop">&#xf04d;</string>
+    <string name="title_activity_apps3">Apps3</string>
+    <string name="hello_round">Hello Round World!</string>
+    <string name="hello_square">Hello Square World!</string>
 </resources>
