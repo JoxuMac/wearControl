@@ -4,5 +4,7 @@
 \contentsline {section}{\numberline {2}REQUISITOS DE LA APLICACI\IeC {\'O}N}{2}{section.2}
 \contentsline {section}{\numberline {3}DECISIONES Y JUSTIFICACI\IeC {\'O}N DE DISE\IeC {\~N}O E IMPLEMENTACI\IeC {\'O}N}{3}{section.3}
 \contentsline {section}{\numberline {4}CONCLUSIONES}{3}{section.4}
-\contentsline {section}{\numberline {5}BIBLIOGRAF\IeC {\'I}A}{3}{section.5}
-\contentsline {section}{\numberline {6}MANUAL DE USUARIO}{3}{section.6}
+\contentsline {section}{\numberline {5}BIBLIOGRAF\IeC {\'I}A}{4}{section.5}
+\contentsline {section}{\numberline {6}MANUAL DE USUARIO}{4}{section.6}
+\contentsline {subsection}{\numberline {6.1}PC}{4}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}SmartWatch}{6}{subsection.6.2}

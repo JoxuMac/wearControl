@@ -129,7 +129,7 @@
 
 \newcommand{\@putAuthor}{
   Autor: \@author\par}
-
+  
 \newcommand{\@intensification}{}
 \newcommand{\intensification}[1]{%
   \renewcommand{\@intensification}{#1}}
