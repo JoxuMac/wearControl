@@ -1,0 +1,12 @@
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\bin\Release\wearControl.exe.config
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\bin\Release\wearControl.exe
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\bin\Release\wearControl.pdb
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\bin\Release\wearControl.xml
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Release\wearControl.vbprojResolveAssemblyReference.cache
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Release\wearControl.wearControl.resources
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Release\wearControl.Resources.resources
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Release\wearControl.vbproj.GenerateResource.Cache
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Release\wearControl.vbproj.CoreCompileInputs.cache
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Release\wearControl.exe
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Release\wearControl.xml
+D:\JoxuMac\Repositorios\wearControl\windows-project\wearControl\obj\Release\wearControl.pdb

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languages>  
+  <name language="es_ES">  
+    <pin>PIN</pin>  
+	<pin_error>Por favor, introduce un PIN numerico de 4 cifras</pin_error>  
+    <acept>Aceptar</acept>  
+    <language>Idioma</language>  
+    <exit_question>¿Seguro que deseas cerrar wearControl?</exit_question>  
+    <exit_warning>Se dejara de escuchar a tu smartwatch</exit_warning>
+	<configuration>Configuracion</configuration>
+	<exit>Salir</exit>
+	<browse>Examinar</browse>
+  </name>  
+  <name language="en_EN">  
+    <pin>PIN</pin>  
+	<pin_error>Please, enter a 4-digit numeric PIN</pin_error>  
+    <acept>Acept</acept>  
+    <language>Language</language>  
+    <exit_question>Are you sure you want to close wearControl?</exit_question>  
+    <exit_warning>It will stop listening to your smartwatch</exit_warning>
+	<configuration>Configuration</configuration>
+	<exit>Exit</exit>
+	<browse>Browse</browse>
+  </name>  
+</languages>
